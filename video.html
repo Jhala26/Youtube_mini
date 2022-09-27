@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #595858;
+        }
+        #header{
+            font-size: 25px;
+            font-weight: 550;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: white;
+        }
+        iframe{
+            display: flex;
+            /* justify-content: center; */
+            /* border: 1px solid red; */
+            /* align-items: center; */
+            margin: auto;
+        }
+    </style>
+</head>
+<body onload="playVideo()">
+
+    <div id="header"></div>
+    
+    <iframe
+      width="800"
+      height="500"
+      id="play_video";
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+
+</body>
+</html>
+<script>
+    let playVideo = () =>{
+        let video = JSON.parse(localStorage.getItem("video"));
+
+        let name = document.getElementById("header");
+        name.innerText = video.snippet.title;
+        // console.log(video);
+
+
+        let id = video.id.videoId;
+        let play_video = document.getElementById("play_video");
+        play_video.src = `https://www.youtube.com/embed/${id}`;
+
+    };
+</script>

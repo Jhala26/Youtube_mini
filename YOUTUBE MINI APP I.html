@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YOUTUBE MINI APP I</title>
+    <style>
+        body{
+            margin: 0px ;
+            padding: 0px;
+        }
+      #nav {
+        display: flex;
+        border: 1px solid #b4b4b4;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      }
+      #nav > img{
+        margin: auto;
+        /* border: 1px solid red; */
+        padding: 0px;
+        height: 60px;
+        margin-left: 20px;
+        
+      }
+      input{
+        width: 500px;
+        height: 40px;
+        font-size: 20px;
+      }
+      #search{
+        margin: auto;
+        margin-left: 100px;
+      }
+      #login{
+        margin-right: 20px;
+        /* border: 1px solid green; */
+        padding: 10px 15px;
+        background-color: rgb(3, 70, 3);
+        color: white;
+        border-radius: 100%;
+        font-size: 20px;
+        
+      }
+      button{
+        width: 100px;
+        height: 45px;
+        font-size: 20px;
+        margin: auto;
+      }
+      #container{
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 30px;
+        /* border: 1px solid red; */
+        width: 90%;
+        margin: auto;
+        margin-top: 20px;
+      }
+      #container > div{
+        /* border: 1px solid green; */
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      }
+      #container > div > h3{
+        text-align: center;
+      }
+      #container > div > img{
+        width: 100%;
+      }
+      
+    </style>
+  </head>
+  <body onload="popular()">
+    <div id="nav">
+      <img
+        src="https://www.freeiconspng.com/uploads/youtube-logo-png-transparent-image-5.png"
+        width="130"
+        alt="Youtube Logo PNG Transparent Image"
+      />
+      <div id="search">
+        <input type="text" id="query" placeholder="Search" />
+        <button onclick="search()">Search</button>
+        <button onclick="sort()">sort</button>
+      </div>
+      <h1 id="login">A</h1>
+    </div>
+    <div id="container"></div>
+  </body>
+</html>
+<script>
+
+  let q="";
+
+popular = async() =>{
+  let pop = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=20&regionCode=IN&key=AIzaSyAkMFjWA__30CNHjeuYt33mBGzxZ1Kb54E";
+
+  let que = await fetch(pop);
+  let data = await que.json();
+  
+  // console.log(data);
+  // q=data.items;
+  display(data.items)
+
+}
+
+
+
+let search = async () =>{
+    let query = document.getElementById("query").value;
+    let data = await getData(query);
+    q=data;
+    // console.log(data);
+    display(data);
+}
+
+
+let getData = async (query) =>{
+    let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${query}&key=AIzaSyAkMFjWA__30CNHjeuYt33mBGzxZ1Kb54E`;
+
+    let res = await fetch(url);
+    let data = await res.json();
+    return data.items;
+}
+
+let display = (data) =>{
+  
+    let container = document.getElementById("container");
+    container.innerHTML = "";
+    data.forEach((elm)=>{
+        // console.log(elm);
+
+
+        let img = document.createElement("img");
+            img.src = elm.snippet.thumbnails.medium.url;
+            // img.src = url;
+
+            let h3 = document.createElement("h3");
+            h3.innerText = elm.snippet.title;
+            // h3.innerText = title;
+
+            let div = document.createElement("div");
+            div.onclick = () =>{
+                saveVideo(elm);
+            }
+            div.setAttribute("class","video");
+
+            div.append(img,h3);
+
+            container.append(div);
+    })
+}
+
+saveVideo = (data) =>{
+  localStorage.setItem("video",JSON.stringify(data));
+  window.location.href = "video.html";
+}
+
+
+let sort = async () =>{
+        let data = await getData(q);
+        data = data.sort((a,b)=>{
+            return s.snippet.Title - b.snippet.publishTime;
+        });
+    }
+
+</script>
